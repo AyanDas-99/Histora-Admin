@@ -1,41 +1,26 @@
-import 'dart:io';
-import 'dart:developer' as dev;
-import 'package:image_compression_flutter/image_compression_flutter.dart';
-import 'package:image_picker_for_web/image_picker_for_web.dart' as image_picker;
+import 'package:image_picker/image_picker.dart';
+import 'dart:math';
 
 class PickImages {
-  static Future<List<File>> pickImages() async {
+  static Future<List<XFile>> pickImages() async {
     try {
-      final files =
-          await image_picker.ImagePickerPlugin().getMultiImageWithOptions();
-// TODO:Fix compression and image
-      final compressedFiles =
-          await Future.wait(files.map((file) => _getCompressed(file)));
+      final files = await ImagePicker()
+          .pickMultiImage(maxHeight: 600, maxWidth: 600, imageQuality: 30);
 
-      return compressedFiles.where((file) => file != null).toList()
-          as List<File>;
+      for (var file in files) {
+        print(await _getFileSize(file, 2));
+      }
+      return files;
     } catch (e) {
       return [];
     }
   }
 
-  static Future<File?> _getCompressed(XFile file) async {
-    ImageFile input =
-        ImageFile(filePath: file.path, rawBytes: await file.readAsBytes());
-    Configuration config = const Configuration(
-      outputType: ImageOutputType.webpThenJpg,
-      // can only be true for Android and iOS while using ImageOutputType.jpg or ImageOutputType.pngÏ
-      useJpgPngNativeCompressor: false,
-      // set quality between 0-100
-      quality: 40,
-    );
-
-    final param = ImageFileConfiguration(input: input, config: config);
-    final output = await compressor.compress(param);
-
-    dev.log("Input size : ${input.sizeInBytes}");
-    dev.log("Output size : ${output.sizeInBytes}");
-
-    return File(output.filePath);
+  static _getFileSize(XFile file, int decimals) async {
+    int bytes = await file.length();
+    if (bytes <= 0) return "0 B";
+    const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+    var i = (log(bytes) / log(1024)).floor();
+    return '${(bytes / pow(1024, i)).toStringAsFixed(decimals)} ${suffixes[i]}';
   }
 }

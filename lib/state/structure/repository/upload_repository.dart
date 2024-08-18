@@ -1,15 +1,15 @@
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:histora_admin/state/exceptions.dart';
 import 'package:histora_admin/state/structure/models/structure.dart';
 import 'package:histora_admin/state/structure/models/structure_meta.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 
 abstract class UploadRepository {
   /// Throws [AssetUploadException] on error
   Future<List<String>> uploadAsset(
-      {required List<String> images, required String id});
+      {required List<XFile> images, required String id});
 
   /// Throws [MetaDataUploadException] on error
   Future<bool> uploadMeta(StructureMeta meta);
@@ -28,7 +28,7 @@ class UploadRepositoryImpl implements UploadRepository {
   });
   @override
   Future<List<String>> uploadAsset({
-    required List<String> images,
+    required List<XFile> images,
     required String id,
   }) async {
     final List<String> downloadUrls = [];
@@ -39,11 +39,11 @@ class UploadRepositoryImpl implements UploadRepository {
     }
 
     for (var image in images) {
-      final file = File(image);
-      final name = basename(image);
+      final name = basename(image.path);
       final ref = storage.ref().child('assets/$id/$name');
       try {
-        await ref.putFile(file);
+        await ref.putData(await image.readAsBytes(),
+            SettableMetadata(contentType: 'image/jpeg'));
         final downloadUrl = await ref.getDownloadURL();
         downloadUrls.add(downloadUrl);
       } on FirebaseException catch (e) {

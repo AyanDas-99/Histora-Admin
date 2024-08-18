@@ -27,6 +27,7 @@ class Structure extends MapView<String, dynamic> {
         });
 
   Structure copyWith({
+    String? id,
     String? title,
     String? description,
     List<String>? images,
@@ -34,7 +35,7 @@ class Structure extends MapView<String, dynamic> {
     Coordinate? coordinate,
   }) {
     return Structure(
-      id: id,
+      id: id ?? this.id,
       title: title ?? this.title,
       description: description ?? this.description,
       images: images ?? this.images,

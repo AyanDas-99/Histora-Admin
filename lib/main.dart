@@ -48,24 +48,9 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text("[ Histora Mod   ;) ].... wonderful guys here..."),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Expanded(
-                flex: 5,
-                child: Container(
-                  color: Colors.grey.shade200,
-                  child: const UploadForm(),
-                )),
-            const SizedBox(height: 10),
-            Expanded(
-                flex: 1,
-                child: Container(
-                  color: Colors.grey.shade200,
-                )),
-          ],
-        ),
+      body: const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: UploadForm(),
       ),
     );
   }

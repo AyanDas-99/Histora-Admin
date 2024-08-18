@@ -9,6 +9,7 @@ sealed class UploadEvent extends Equatable {
 
 class StartUpload extends UploadEvent {
   final Structure structure;
+  final List<XFile> files;
 
-  const StartUpload({required this.structure});
+  const StartUpload({required this.structure, required this.files});
 }
