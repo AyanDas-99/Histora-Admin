@@ -29,7 +29,10 @@ class _UploadFormState extends State<UploadForm> {
       description: descController.text,
       images: [],
       history: History(history: historyController.text),
-      coordinate: (2, 2),
+      coordinate: (
+        double.parse(latController.text),
+        double.parse(lonController.text)
+      ),
     );
   }
 
@@ -78,6 +81,36 @@ class _UploadFormState extends State<UploadForm> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         hintText: 'History'),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: latController,
+                            maxLength: 10,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                hintText: 'Latitude'),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: TextField(
+                            controller: lonController,
+                            maxLength: 10,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                hintText: 'Longitude'),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 30),
                   TextButton(
